@@ -147,4 +147,29 @@
     margin-bottom: 20px; /* Add some space below the heading */
   }
   
+  .result-section {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
+    color: #388e3c;
+  }
+  .submit-section {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .submit-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049;
+  }
   
