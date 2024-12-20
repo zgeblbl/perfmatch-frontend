@@ -8,6 +8,12 @@
     min-height: 100vh;
     padding: 20px;
   }
+  .container {
+    padding: 0 20px; /* Adds 20px padding to the left and right sides */
+    margin: 0 auto; /* Centers the content horizontally */
+    max-width: 1200px; /* Optional: Limits the width of the container */
+    box-sizing: border-box; /* Ensures padding doesn't add to the width */
+  }
   
   /* Player Boxes Container */
   .player-boxes {
@@ -171,5 +177,23 @@
   
   .submit-button:hover {
     background-color: #45a049;
+  }
+
+  .contributions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+  }
+  
+  .contributions-table th, 
+  .contributions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .contributions-table th {
+    background-color: #f4f4f4;
   }
   
