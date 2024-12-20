@@ -13,6 +13,7 @@ const HomePage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [playerList, setPlayerList] = useState(allPlayers);
     const [result, setResult] = useState(null);
+    const [contributions, setContributions] = useState([]);
   
     const handleDropdown = (index) => {
       setDropdownIndex(index);
@@ -97,32 +98,84 @@ const HomePage = () => {
         alert("Failed to get prediction. Please try again later.");
       }
     };
+    const handleCalculateContributions = async () => {
+      const filteredPlayers = selectedPlayers.filter((player) => player !== null);
+
+      if (filteredPlayers.length < 6) {
+        alert('Please select at least 6 players before calculating contributions!');
+        return;
+      }
+
+      try {
+        const response = await axios.post('http://localhost:5000/calculate-contributions', {
+          filteredPlayers,
+        });
+        if (response.data.success) {
+          setContributions(response.data.contributions);
+        } else {
+          alert('Failed to calculate contributions');
+        }
+      } catch (error) {
+        console.error('Error calculating contributions:', error);
+        alert('Failed to calculate contributions. Please try again later.');
+      }
+    };  
   
     return (
       <div>
-        <h1>PerfMatch</h1>
-        <div className="player-boxes">
-          {selectedPlayers.map((_, index) => renderPlayerBox(index))}
-        </div>
-        {/* Submit button */}
-        <div className="submit-section">
-          <button className="submit-button" onClick={handleSendToBackend}>
-            Get Team Success Prediction
-          </button>
-        </div>
-
-        {/* Result Section */}
-        {result !== null && (
-          <div className="result-section">
-            <h2>Team Success Prediction:</h2>
-            <p>{result}</p>
+        <div className="container">
+          <h1>PerfMatch</h1>
+          <div className="player-boxes">
+            {selectedPlayers.map((_, index) => renderPlayerBox(index))}
           </div>
-        )}
-        <div className="substitute-note">
-          <p>
-            The last 3 players are substitutes, and choosing them is optional.
-          </p>
-        </div>
+          {/* Submit button */}
+          <div className="submit-section">
+            <button className="submit-button" onClick={handleSendToBackend}>
+              Get Team Success Prediction
+            </button>
+            <button className="submit-button" onClick={handleCalculateContributions}>
+              Calculate Each Player's Contribution
+            </button>
+          </div>
+
+          {/* Result Section */}
+          {result !== null && (
+            <div className="result-section">
+              <h2>Team Success Prediction:</h2>
+              <p>{result}</p>
+            </div>
+          )}
+          {contributions.length > 0 && (
+            <div className="contributions-section">
+              <h2>Player Contributions:</h2>
+              <table className="contributions-table">
+                <thead>
+                  <tr>
+                    <th>Player Name</th>
+                    {Object.keys(contributions[0]).map((key) => (
+                      <th key={key}>{key}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {contributions.map((contribution, index) => (
+                    <tr key={index}>
+                      <td>{selectedPlayers[index]}</td> {}
+                      {Object.values(contribution).map((value, idx) => (
+                        <td key={idx}>{value.toFixed(2)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="substitute-note">
+            <p>
+              The last 3 players are substitutes, and choosing them is optional.
+            </p>
+          </div>
+          </div>
         <Footer /> {/* Include Footer here if it's needed */}
       </div>
     );
